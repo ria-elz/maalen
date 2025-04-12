@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maalen - Premium Clothing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-900">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-wide">Maalen.in</h1>
+            <div class="space-x-6">
+                <a href="#" class="hover:text-gray-600">Home</a>
+                <a href="#categories" class="hover:text-gray-600">Categories</a>
+                <a href="#products" class="hover:text-gray-600">Shop</a>
+                <a href="cart.html" class="hover:text-gray-600">Cart</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <!-- Hero Section -->
+<section class="relative h-screen flex items-center justify-start px-8 bg-cover bg-center" style="background-image: url('https://maalencdn.s3.ap-south-1.amazonaws.com/banner.jpg');">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-blue-600/50"></div>
+    <div class="relative z-10 max-w-2xl text-white">
+        <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-4">Raining Offers For<br />Hot Summer!</h1>
+        <p class="text-xl font-medium mb-6">Offers On All Products</p>
+        <a href="#products" class="inline-block bg-white text-black font-semibold px-6 py-3 text-sm rounded hover:bg-gray-200 transition">SHOP NOW</a>
+    </div>
+</section>
+
+
+    <!-- Categories -->
+   <!-- Shop by Category -->
+<section class="py-10 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-6">Shop by Category</h2>
+      
+      <!-- Category Icons -->
+      <div class="flex overflow-x-auto gap-6 pb-4">
+        <!-- Category Item -->
+        <div class="flex-shrink-0 text-center">
+          <img src="accessories.png" alt="Accessoriesimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">ACCESSORIES</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="fitness.png" alt="Fitnessimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">FITNESS</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="personal-care.png" alt="Personal Careimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">PERSONAL CARE</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="home-kitchen.png" alt="Home & Kitchenimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">HOME & KITCHEN</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="tools.png" alt="Toolsimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">TOOLS</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="clothing.png" alt="Clothingimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">CLOTHING</p>
+        </div>
+        <div class="flex-shrink-0 text-center">
+          <img src="footwear.png" alt="Footwearimg" class="h-24 mx-auto">
+          <p class="mt-2 font-medium">FOOTWEAR</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Banners -->
+  <section class="py-10 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-6">
+      <!-- Clothing -->
+      <div class="relative group overflow-hidden">
+        <img src="clothing-banner.jpg" alt="Clothing" class="w-full h-64 object-cover group-hover:scale-105 transition">
+        <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+          <h3 class="text-xl font-semibold mb-3">Clothing For You</h3>
+          <a href="#" class="bg-white text-black px-5 py-2 text-sm font-bold rounded hover:bg-gray-200">SHOP NOW</a>
+        </div>
+      </div>
+      <!-- Eyewear -->
+      <div class="relative group overflow-hidden">
+        <img src="eyewear-banner.jpg" alt="Eyewear" class="w-full h-64 object-cover group-hover:scale-105 transition">
+        <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+          <h3 class="text-xl font-semibold mb-3">Latest Eyewear For You</h3>
+          <a href="#" class="bg-white text-black px-5 py-2 text-sm font-bold rounded hover:bg-gray-200">SHOP NOW</a>
+        </div>
+      </div>
+      <!-- Footwear -->
+      <div class="relative group overflow-hidden">
+        <img src="footwear-banner.jpg" alt="Footwear" class="w-full h-64 object-cover group-hover:scale-105 transition">
+        <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+          <h3 class="text-xl font-semibold mb-3">Comfy Footwears</h3>
+          <a href="#" class="bg-white text-black px-5 py-2 text-sm font-bold rounded hover:bg-gray-200">SHOP NOW</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+    <!-- Product Grid -->
+  <!-- Featured Products Section - Exact Match to Image -->
+<section id="products" class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-2 text-center">Featured Products</h2>
+      <div class="flex justify-center mb-10">
+          <div class="w-24 h-1 bg-blue-500"></div>
+      </div>
+      
+      <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <!-- Products will be loaded dynamically here -->
+      </div>
+  </div>
+</section>
+
+<script>
+  // Function to fetch featured products from the server
+  function loadFeaturedProducts() {
+      const productsGrid = document.getElementById('featured-products-grid');
+      
+      // Show loading state
+      productsGrid.innerHTML = `
+          <div class="col-span-full text-center py-8">
+              <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <p class="mt-2 text-gray-600">Loading products...</p>
+          </div>`;
+      
+      // Make API request to get featured products
+      fetch('http://localhost:5000/api/products/featured')
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(products => {
+              // Clear loading indicator
+              productsGrid.innerHTML = '';
+              
+              // If no products found
+              if (products.length === 0) {
+                  productsGrid.innerHTML = `
+                      <div class="col-span-full text-center py-8">
+                          <p>No featured products available at the moment.</p>
+                      </div>`;
+                  return;
+              }
+              
+              // Loop through products and create HTML for each
+              // Loop through products and create HTML for each
+products.forEach(product => {
+    const productElement = document.createElement('div');
+    productElement.className = 'bg-white rounded overflow-hidden shadow-sm hover:shadow transition cursor-pointer';
+    
+    // Check if product is on sale (optional: if you have a sale_price column)
+    const isOnSale = product.sale_price && product.sale_price < product.price;
+    const currentPrice = isOnSale ? product.sale_price : product.price;
+    const originalPrice = product.price;
+
+    productElement.innerHTML = `
+        <div class="relative">
+            <img src="${product.image_url || 'https://via.placeholder.com/300x300'}" 
+                 alt="${product.name}" 
+                 class="w-full h-48 object-contain bg-white" 
+                 onerror="this.src='https://via.placeholder.com/300x300'">
+            ${isOnSale ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Sale!</span>' : ''}
+        </div>
+        <div class="p-4">
+            <h3 class="text-base font-medium text-gray-900 mb-1 hover:text-blue-600">${product.name}</h3>
+            <p class="text-sm text-gray-500 mb-2">${product.variant || ''}</p>
+            <div class="flex items-center mb-2">
+                <!-- Show the original price with a strike-through if it's on sale -->
+                ${isOnSale ? `<span class="text-gray-400 line-through text-sm mr-2">₹${parseFloat(originalPrice).toFixed(2)}</span>` : ''}
+                <!-- Show the current price -->
+                <span class="font-bold text-gray-900">₹${parseFloat(currentPrice).toFixed(2)}</span>
+                <span class="text-xs text-gray-500 ml-1">Tax</span>
+            </div>
+            <div class="flex text-yellow-400">
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </div>
+        </div>`;
+    
+    // When the product card is clicked, navigate to the product page with its ID
+    productElement.addEventListener('click', () => {
+        window.location.href = `product.html?id=${product.id}`;
+    });
+    
+    productsGrid.appendChild(productElement);
+});
+          })
+          .catch(error => {
+              console.error('Error fetching products:', error);
+              productsGrid.innerHTML = `
+                  <div class="col-span-full text-center py-8">
+                      <p>Failed to load products. Please try again later.</p>
+                  </div>`;
+          });
+  }
+  
+  // Load products when the page loads
+  document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+  </script>
+
+<!-- Special Edition Promo Banner -->
+<section class="w-full flex flex-col md:flex-row items-center justify-between bg-blue-500 text-white p-8">
+    <div class="flex-1 text-center md:text-left">
+      <p class="text-sm uppercase mb-2">Limited Time Offer</p>
+      <h2 class="text-4xl font-bold mb-4">Special Edition</h2>
+      <a href="#" class="inline-block bg-white text-black font-semibold px-6 py-3 rounded shadow hover:bg-gray-200 transition">
+        Shop Now
+      </a>
+    </div>
+    <div class="flex-1">
+      <img src="your-image.jpg" alt="Special Edition Model" class="w-full max-h-80 object-cover rounded-md">
+    </div>
+  </section>
+  
+  <!-- Feature Icons -->
+  <section class="bg-white py-8 border-t">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      
+      <!-- Feature 1 -->
+      <div>
+        <img src="all-india-shipping-icon.png" alt="Shipping" class="mx-auto h-12 mb-2">
+        <p class="font-semibold">All India Shipping</p>
+      </div>
+  
+      <!-- Feature 2 -->
+      <div>
+        <img src="best-quality-icon.png" alt="Quality" class="mx-auto h-12 mb-2">
+        <p class="font-semibold">Best Quality</p>
+      </div>
+  
+      <!-- Feature 3 -->
+      <div>
+        <img src="best-offers-icon.png" alt="Offers" class="mx-auto h-12 mb-2">
+        <p class="font-semibold">Best Offers</p>
+      </div>
+  
+      <!-- Feature 4 -->
+      <div>
+        <img src="secure-payments-icon.png" alt="Secure" class="mx-auto h-12 mb-2">
+        <p class="font-semibold">Secure Payments</p>
+      </div>
+  
+    </div>
+  </section>
+  
+
+    <!-- Explore the Look -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-10 text-center">Explore the Look</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="https://maalencdn.s3.ap-south-1.amazonaws.com/look1.jpg" class="w-full h-64 object-cover rounded" />
+                <img src="https://maalencdn.s3.ap-south-1.amazonaws.com/look2.jpg" class="w-full h-64 object-cover rounded" />
+                <img src="https://maalencdn.s3.ap-south-1.amazonaws.com/look3.jpg" class="w-full h-64 object-cover rounded" />
+                <img src="https://maalencdn.s3.ap-south-1.amazonaws.com/look4.jpg" class="w-full h-64 object-cover rounded" />
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="bg-gray-900 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center md:justify-between">
+          
+          <!-- Spacer on Left -->
+          <div class="hidden md:block w-1/3"></div>
+      
+          <!-- Center: Copyright -->
+          <div class="text-center w-full md:w-1/3 mb-4 md:mb-0">
+            <p class="text-lg font-semibold">&copy;2025 Maalen.in. Powered by AkT.</p>
+          </div>
+      
+          <!-- Right: Social Icons -->
+          <div class="flex justify-center md:justify-end space-x-4 w-full md:w-1/3">
+            <a href="https://facebook.com/yourpage" target="_blank" class="hover:text-blue-400">
+              <i class="fab fa-facebook-f text-2xl"></i>
+            </a>
+            <a href="https://instagram.com/yourpage" target="_blank" class="hover:text-pink-400">
+              <i class="fab fa-instagram text-2xl"></i>
+            </a>
+            <a href="https://youtube.com/yourchannel" target="_blank" class="hover:text-red-500">
+              <i class="fab fa-youtube text-2xl"></i>
+            </a>
+            <a href="mailto:yourname@gmail.com" target="_blank" class="hover:text-green-400">
+              <i class="fab fa-google text-2xl"></i>
+            </a>
+          </div>
+      
+        </div>
+      </footer>
+      
+      
+</body>
+
+</html>
