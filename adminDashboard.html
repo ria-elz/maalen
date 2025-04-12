@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-color="blue">
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <a href="#" class="simple-text">Admin Panel</a>
+                </div>
+                <ul class="nav">
+                    <li class="nav-item active"><a class="nav-link" href="/admin/dashboard"><p>Dashboard</p></a></li>
+                    <li><a class="nav-link" href="/admin/products/manage"><p>Manage Products</p></a></li>
+                    <li><a class="nav-link" href="/admin/tracking"><p>Track Orders</p></a></li>
+                    <li><a class="nav-link" href="/admin/logout"><p>Logout</p></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Dashboard</a>
+                </div>
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+                    <!-- Charts Section -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Sales by Product</h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="salesPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Sales Trend</h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="salesTrendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manage Products Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4 class="card-title">Add Products</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="product-form" method="POST">
+                                <div class="form-group">
+                                    <label for="name">Product Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter product name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input type="text" class="form-control" id="price" placeholder="Enter price">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" rows="3"></textarea>
+                                </div>
+                                <!-- Extend with additional fields as needed: img_url, variant, sale_price, category, is_featured -->
+                                <button type="submit" class="btn btn-primary">Add Product</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Update Tracking Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4 class="card-title">Update Tracking</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="tracking-form" method="POST">
+                                <div class="form-group">
+                                    <label for="order-id">Order ID</label>
+                                    <input type="text" class="form-control" id="order-id" placeholder="Enter Order ID">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tracking-number">Tracking Number</label>
+                                    <input type="text" class="form-control" id="tracking-number" placeholder="Enter Tracking Number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <input type="text" class="form-control" id="status" placeholder="Enter Order Status (Dispatched/Delivered)">
+                                </div>
+                                <button type="submit" class="btn btn-success">Update Tracking</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/chartist.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Example: Load Pie Chart for Sales by Product
+        // (You should replace this static data with dynamic data from your backend using fetch)
+        const salesPieCtx = document.getElementById('salesPieChart').getContext('2d');
+        new Chart(salesPieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['T-Shirt', 'Hoodie', 'Others'],
+                datasets: [{
+                    data: [30, 40, 30],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            }
+        });
+
+        // Example: Load Line Chart for Sales Trend
+        const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+        new Chart(salesTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Sales Trend',
+                    data: [10, 20, 15, 25, 20],
+                    borderColor: '#36A2EB',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        // Handle Product Form Submission
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                price: document.getElementById('price').value,
+                description: document.getElementById('description').value
+                // Add other fields as necessary (img_url, variant, sale_price, category, is_featured)
+            };
+
+            fetch('/admin/products/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.text())
+            .then(message => alert(message))
+            .catch(error => console.error('Error adding product:', error));
+        });
+
+        // Handle Tracking Form Submission
+        document.getElementById('tracking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const trackingData = {
+                orderId: document.getElementById('order-id').value,
+                trackingNumber: document.getElementById('tracking-number').value,
+                status: document.getElementById('status').value
+            };
+
+            fetch('/admin/tracking/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(trackingData)
+            })
+            .then(response => response.text())
+            .then(message => alert(message))
+            .catch(error => console.error('Error updating tracking:', error));
+        });
+    </script>
+</body>
+</html>
