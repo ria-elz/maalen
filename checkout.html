@@ -1,86 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Maalen</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Maalen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Input validation */
+    input:invalid, textarea:invalid {
+      border-color: #f87171 !important;
+    }
+    input:valid, textarea:valid {
+      border-color: #34d399 !important;
+    }
+  </style>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">Checkout</h1>
-        
-        <div class="flex flex-col lg:flex-row gap-8">
-            <div class="lg:w-2/3">
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-bold mb-4">Shipping Details</h2>
-                    <form id="checkout-form" class="space-y-4">
-                        <div>
-                            <label class="block mb-1">Full Name</label>
-                            <input type="text" class="w-full p-2 border rounded" required>
-                        </div>
-                        <div>
-                            <label class="block mb-1">Email</label>
-                            <input type="email" class="w-full p-2 border rounded" required>
-                        </div>
-                        <div>
-                            <label class="block mb-1">Shipping Address</label>
-                            <textarea class="w-full p-2 border rounded" rows="4" required></textarea>
-                        </div>
-                    </form>
-                </div>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+    <div class="flex flex-col lg:flex-row gap-8">
+      
+      <!-- Shipping Details -->
+      <div class="lg:w-2/3">
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <h2 class="text-xl font-bold mb-4">Shipping Details</h2>
+          <form id="checkout-form" class="space-y-4">
+            <div>
+              <label class="block mb-1">Full Name</label>
+              <input type="text" id="customer-name" class="w-full p-2 border rounded" required>
             </div>
-
-            <div class="lg:w-1/3">
-                <div class="bg-white p-6 rounded-lg shadow-sm sticky top-8">
-                    <h2 class="text-xl font-bold mb-4">Order Summary</h2>
-                    <div id="order-summary">
-                        <!-- Order items will be populated by JavaScript -->
-                    </div>
-                    <button type="submit" form="checkout-form" 
-                            class="w-full bg-green-600 text-white py-3 rounded-lg mt-6 hover:bg-green-700">
-                        Complete Purchase
-                    </button>
-                </div>
+            <div>
+              <label class="block mb-1">Email</label>
+              <input type="email" id="customer-email" class="w-full p-2 border rounded" required>
             </div>
+            <!-- Add this after the email field -->
+<div>
+  <label class="block mb-1">Phone Number</label>
+  <input type="tel" id="customer-phone" class="w-full p-2 border rounded" required>
+</div>
+            <div>
+              <label class="block mb-1">Shipping Address</label>
+              <textarea id="customer-address" class="w-full p-2 border rounded" rows="4" required></textarea>
+            </div>
+          </form>
         </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="lg:w-1/3">
+        <div class="bg-white p-6 rounded-lg shadow-sm sticky top-8">
+          <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+          <div id="order-summary" class="space-y-4"></div>
+          <!-- Change your button element to add an ID -->
+<button 
+type="submit" 
+id="submit-btn"
+class="w-full bg-green-600 text-white py-3 rounded-lg mt-6 hover:bg-green-700">
+Complete Purchase
+</button>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <script>
-        // Get cart data from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const cartData = JSON.parse(decodeURIComponent(urlParams.get('cart')));
+  <script>
+    const TAX_RATE = 0.18;
+    const params = new URLSearchParams(window.location.search);
+    let cartData;
+    
+    if (params.has('single')) {
+      cartData = JSON.parse(decodeURIComponent(params.get('single')));
+    } else {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const subtotal = cart.reduce((s,i)=>s + i.price*i.quantity, 0);
+      cartData = { items: cart, total: subtotal };
+    }
+    
+    // render order-summary exactly as you have it...
+    // …// Add this after cartData initialization
+function renderOrderSummary() {
+  const summaryContainer = document.getElementById('order-summary');
+  let html = '';
 
-        // Display order summary
-        const orderSummary = document.getElementById('order-summary');
-        
-        if (cartData && cartData.items) {
-            let html = `<div class="space-y-4">`;
-            
-            cartData.items.forEach(item => {
-                html += `
-                    <div class="flex justify-between">
-                        <span>${item.name} (${item.variant})</span>
-                        <span>₹${item.price} x ${item.quantity}</span>
-                    </div>
-                `;
-            });
+  cartData.items.forEach(item => {
+    html += `
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="font-medium">${item.name}</p>
+          <p class="text-sm text-gray-500">Qty: ${item.quantity}</p>
+        </div>
+        <p class="font-medium">₹${(item.price * item.quantity).toFixed(2)}</p>
+      </div>
+    `;
+  });
 
-            html += `
-                <div class="border-t pt-4">
-                    <div class="flex justify-between font-bold">
-                        <span>Total</span>
-                        <span>₹${cartData.total}</span>
-                    </div>
-                </div>
-            `;
+  html += `
+    <div class="border-t pt-4">
+      <div class="flex justify-between mb-2">
+        <span>Subtotal:</span>
+        <span>₹${cartData.total.toFixed(2)}</span>
+      </div>
+      <div class="flex justify-between mb-2">
+        <span>Tax (${(TAX_RATE * 100)}%):</span>
+        <span>₹${(cartData.total * TAX_RATE).toFixed(2)}</span>
+      </div>
+      <div class="flex justify-between font-bold">
+        <span>Total:</span>
+        <span>₹${(cartData.total * (1 + TAX_RATE)).toFixed(2)}</span>
+      </div>
+    </div>
+  `;
 
-            orderSummary.innerHTML = html;
-        } else {
-            orderSummary.innerHTML = '<p>No items in cart</p>';
-            setTimeout(() => window.location.href = '/', 2000);
-        }
+  summaryContainer.innerHTML = html;
+}
+
+// Call this when the page loads
+renderOrderSummary();
+    
+    // hook the form submit instead of a click
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Get the button by ID instead of querySelector
+  const button = document.getElementById('submit-btn');
+  
+  try {
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner"></span> Processing...';
+
+    // Collect form data
+    const formData = {
+      name: document.getElementById('customer-name').value.trim(),
+      email: document.getElementById('customer-email').value.trim(),
+      phone: document.getElementById('customer-phone').value.trim(),
+      address: document.getElementById('customer-address').value.trim()
+    };
+
+    // Client-side validation
+    if (!/^\d{10}$/.test(formData.phone)) {
+      throw new Error('Please enter a valid 10-digit phone number');
+    }
+
+    // Calculate total amount with tax
+    const totalAmount = (cartData.total * (1 + TAX_RATE)).toFixed(2);
+    if (totalAmount < 1) {
+      throw new Error('Minimum order amount is ₹1.00');
+    }
+
+    // Generate unique order ID
+    const orderId = `MAALEN_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+    // Create payment order
+    const response = await fetch('http://localhost:5000/payments/cashfree/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId,
+        amount: totalAmount,
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhone: formData.phone
+      })
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Payment initiation failed');
+    }
+
+    // Store order details temporarily
+    localStorage.setItem('currentOrder', JSON.stringify({
+      orderId,
+      amount: totalAmount,
+      items: cartData.items,
+      customer: formData
+    }));
+
+    // Redirect to Cashfree payment page
+    window.location.href = result.payment_link;
+
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = 'Complete Purchase';
+  }
+});
     </script>
+    
 </body>
 </html>
