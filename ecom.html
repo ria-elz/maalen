@@ -134,95 +134,98 @@
 <script>
   // Function to fetch featured products from the server
   function loadFeaturedProducts() {
-      const productsGrid = document.getElementById('featured-products-grid');
-      
-      // Show loading state
-      productsGrid.innerHTML = `
-          <div class="col-span-full text-center py-8">
-              <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-              <p class="mt-2 text-gray-600">Loading products...</p>
-          </div>`;
-      
-      // Make API request to get featured products
-      fetch('http://localhost:5000/api/products/featured')
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error('Network response was not ok');
-              }
-              return response.json();
-          })
-          .then(products => {
-              // Clear loading indicator
-              productsGrid.innerHTML = '';
-              
-              // If no products found
-              if (products.length === 0) {
-                  productsGrid.innerHTML = `
-                      <div class="col-span-full text-center py-8">
-                          <p>No featured products available at the moment.</p>
-                      </div>`;
-                  return;
-              }
-              
-              // Loop through products and create HTML for each
-              // Loop through products and create HTML for each
-products.forEach(product => {
-    const productElement = document.createElement('div');
-    productElement.className = 'bg-white rounded overflow-hidden shadow-sm hover:shadow transition cursor-pointer';
-    
-    // Check if product is on sale (optional: if you have a sale_price column)
-    const isOnSale = product.sale_price && product.sale_price < product.price;
-    const currentPrice = isOnSale ? product.sale_price : product.price;
-    const originalPrice = product.price;
+  const productsGrid = document.getElementById('featured-products-grid');
 
-    productElement.innerHTML = `
-        <div class="relative">
-            <img src="${product.image_url || 'https://via.placeholder.com/300x300'}" 
-                 alt="${product.name}" 
-                 class="w-full h-48 object-contain bg-white" 
-                 onerror="this.src='https://via.placeholder.com/300x300'">
-            ${isOnSale ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Sale!</span>' : ''}
-        </div>
-        <div class="p-4">
-            <h3 class="text-base font-medium text-gray-900 mb-1 hover:text-blue-600">${product.name}</h3>
-            <p class="text-sm text-gray-500 mb-2">${product.variant || ''}</p>
-            <div class="flex items-center mb-2">
-                <!-- Show the original price with a strike-through if it's on sale -->
-                ${isOnSale ? `<span class="text-gray-400 line-through text-sm mr-2">₹${parseFloat(originalPrice).toFixed(2)}</span>` : ''}
-                <!-- Show the current price -->
-                <span class="font-bold text-gray-900">₹${parseFloat(currentPrice).toFixed(2)}</span>
-                <span class="text-xs text-gray-500 ml-1">Tax</span>
-            </div>
-            <div class="flex text-yellow-400">
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-            </div>
+  // Show loading state
+  productsGrid.innerHTML = `
+    <div class="col-span-full text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <p class="mt-2 text-gray-600">Loading products...</p>
+    </div>`;
+
+  // Fetch fresh data from the API
+  fetch(`http://localhost:5000/api/products/featured?_=${Date.now()}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(products => {
+      console.log('Fetched Featured Products:', products);
+      // Clear loading indicator
+      productsGrid.innerHTML = '';
+
+      if (products.length === 0) {
+        productsGrid.innerHTML = `
+          <div class="col-span-full text-center py-8">
+            <p>No featured products available at the moment.</p>
+          </div>`;
+        return;
+      }
+
+      // Populate the grid with the fetched products
+      products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.className = 'bg-white rounded overflow-hidden shadow-sm hover:shadow transition cursor-pointer';
+
+        // In ecom.html - Update price parsing
+const originalPrice = parseFloat(product.original_price) || 0;
+const currentPrice = parseFloat(product.current_price) || 0;
+const salePrice = parseFloat(product.sale_price) || 0;
+const isOnSale = salePrice > 0 && salePrice < currentPrice;
+
+        // In the productElement.innerHTML section, replace the price div with:
+// In ecom.html's product rendering code
+// In the product rendering section of ecom.html
+// Replace the product rendering code with:
+productElement.innerHTML = `
+  <a href="product.html?id=${product.id}" class="block">
+    <div class="relative">
+      <img src="${product.image_url || 'https://via.placeholder.com/300x300'}" 
+           alt="${product.name}" 
+           class="w-full h-48 object-cover bg-white"
+           onerror="this.src='https://via.placeholder.com/300x300'">
+      ${product.is_featured ? 
+        '<span class="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">Featured</span>' : ''}
+      ${product.sale_price < product.original_price ? 
+        '<span class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Sale!</span>' : ''}
+    </div>
+    <div class="p-4">
+      <h3 class="text-base font-medium text-gray-900 mb-1 hover:text-blue-600">${product.name}</h3>
+      <p class="text-sm text-gray-500 mb-2">${product.variant || ''}</p>
+      <div class="flex items-baseline gap-2">
+        ${product.sale_price < product.original_price ? `
+          <span class="text-lg font-bold text-gray-900">
+            ₹${product.sale_price.toFixed(2)}
+          </span>
+          <span class="text-sm text-gray-400 line-through">
+            ₹${product.original_price.toFixed(2)}
+          </span>
+        ` : `
+          <span class="text-lg font-bold text-gray-900">
+            ₹${product.current_price.toFixed(2)}
+          </span>
+        `}
+      </div>
+    </div>
+  </a>`;
+
+        productsGrid.appendChild(productElement);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching products:', error);
+      productsGrid.innerHTML = `
+        <div class="col-span-full text-center py-8">
+          <p>Failed to load products. Please try again later.</p>
         </div>`;
-    
-    // When the product card is clicked, navigate to the product page with its ID
-    productElement.addEventListener('click', () => {
-        window.location.href = `product.html?id=${product.id}`;
     });
-    
-    productsGrid.appendChild(productElement);
-});
-          })
-          .catch(error => {
-              console.error('Error fetching products:', error);
-              productsGrid.innerHTML = `
-                  <div class="col-span-full text-center py-8">
-                      <p>Failed to load products. Please try again later.</p>
-                  </div>`;
-          });
-  }
-  
+}
+
   // Load products when the page loads
   document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
-  </script>
-
+</script>
 <!-- Special Edition Promo Banner -->
 <section class="w-full flex flex-col md:flex-row items-center justify-between bg-blue-500 text-white p-8">
     <div class="flex-1 text-center md:text-left">
