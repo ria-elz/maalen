@@ -77,6 +77,16 @@
                                     <label for="description">Description</label>
                                     <textarea class="form-control" id="description" rows="3"></textarea>
                                 </div>
+                                <!-- Inside the product-form in adminDashboard.html -->
+                                <div class="form-group">
+                                <label for="image-url">Image URL</label>
+                                <input type="text" class="form-control" id="image-url" placeholder="Enter image URL">
+                                </div>
+                                <div class="form-group">
+                                    <label for="is-featured">Mark as Featured Product</label>
+                                    <input type="checkbox" id="is-featured" name="is_featured" value="1" />
+
+                                </div>
                                 <!-- Extend with additional fields as needed: img_url, variant, sale_price, category, is_featured -->
                                 <button type="submit" class="btn btn-primary">Add Product</button>
                             </form>
@@ -148,24 +158,26 @@
         });
 
         // Handle Product Form Submission
-        document.getElementById('product-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = {
-                name: document.getElementById('name').value,
-                price: document.getElementById('price').value,
-                description: document.getElementById('description').value
-                // Add other fields as necessary (img_url, variant, sale_price, category, is_featured)
-            };
+        document.getElementById('product-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const formData = {
+    name: document.getElementById('name').value,
+    price: document.getElementById('price').value,
+    description: document.getElementById('description').value,
+        image_url: document.getElementById('image-url').value,
+        is_featured: document.getElementById('is-featured').checked ? 1 : 0, // Explicitly convert to 1/0
+  };
 
-            fetch('/admin/products/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.text())
-            .then(message => alert(message))
-            .catch(error => console.error('Error adding product:', error));
-        });
+
+  fetch('/admin/products/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.text())
+  .then(message => alert(message))
+  .catch(error => console.error('Error:', error));
+});
 
         // Handle Tracking Form Submission
         document.getElementById('tracking-form').addEventListener('submit', function(e) {
