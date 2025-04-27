@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Manage Products</title>
-  <!-- Light Bootstrap Dashboard + Bootstrap CSS -->
   <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/css/light-bootstrap-dashboard.css" rel="stylesheet">
 </head>
 
 <body>
   <div class="wrapper">
-    <!-- SIDEBAR -->
     <div class="sidebar" data-color="blue">
       <div class="sidebar-wrapper">
         <div class="logo">
@@ -25,9 +23,7 @@
       </div>
     </div>
 
-    <!-- MAIN PANEL -->
     <div class="main-panel">
-      <!-- TOP NAV -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Manage Products</a>
@@ -51,11 +47,12 @@
                     <th>Rating</th>
                     <th>Original Price</th>
                     <th>Current Price</th>
+                    <th>Featured</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Will be populated by fetch() below -->
+                  <!-- Products will be populated dynamically -->
                 </tbody>
               </table>
             </div>
@@ -65,69 +62,100 @@
     </div>
   </div>
 
-  <!-- JS SCRIPTS -->
-  <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
-  <script src="/assets/js/core/bootstrap.min.js"></script>
-  <script src="/assets/js/plugins/chartist.min.js"></script>
-
   <script>
-    // On page load, fetch products from backend
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(products => {
-        const tbody = document.querySelector('#productsTable tbody');
-        tbody.innerHTML = '';
-        products.forEach(product => {
-          tbody.innerHTML += `
-            <tr data-id="${product.id}">
-              <td contenteditable="true">${product.name}</td>
-              <td contenteditable="true">${product.quantity || ''}</td>
-              <td contenteditable="true">${product.variant || ''}</td>
-              <td contenteditable="true">${product.rating || ''}</td>
-              <td contenteditable="true">${product.original_price || ''}</td>
-              <td contenteditable="true">${product.current_price || ''}</td>
-              <td>
-                <button class="btn btn-sm btn-primary save-btn">Save</button>
-              </td>
-            </tr>
-          `;
-        });
-
- // Add event listeners to "Save" buttons
-document.querySelectorAll('.save-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const row = btn.closest('tr');
-    const id = row.dataset.id;
-    // Grab updated data from table cells – trim to remove extra spaces
-    const updatedData = {
-      name: row.children[0].innerText.trim(),
-      quantity: row.children[1].innerText.trim() || 0,  // Default to 0 if empty
-      variant: row.children[2].innerText.trim(),
-      rating: row.children[3].innerText.trim() || 0,     // Default to 0 if empty
-      original_price: row.children[4].innerText.trim() || 0,
-      current_price: row.children[5].innerText.trim() || 0,
-    };
-
-    fetch(`/admin/products/update/${id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedData)
-    })
-    .then(resp => {
-      if (resp.ok) {
-        alert('Product updated successfully!');
-      } else {
-        alert('Update failed :(');
-      }
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      alert('Error updating product');
-    });
-  });
-});
-      })
-      .catch(err => console.error('Error fetching products:', err));
+    // Fetch and display products
+    function loadProducts() {
+      fetch('/api/products')
+        .then((res) => res.json())
+        .then((products) => {
+          const tbody = document.querySelector('#productsTable tbody');
+          tbody.innerHTML = '';
+  
+          products.forEach((product) => {
+            tbody.innerHTML += `
+              <tr data-id="${product.id}">
+                <td contenteditable="true">${product.name}</td>
+                <td contenteditable="true">${product.quantity || ''}</td>
+                <td contenteditable="true">${product.variant || ''}</td>
+                <td contenteditable="true">${product.rating || ''}</td>
+                <td contenteditable="true">${product.original_price || ''}</td>
+                <td contenteditable="true">${product.current_price || ''}</td>
+                <td contenteditable="true">${product.is_featured ? 'F' : ''}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary save-btn">Save</button>
+                  <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+                </td>
+              </tr>
+            `;
+          });
+  
+          // Add event listeners to Save buttons
+          document.querySelectorAll('.save-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const row = btn.closest('tr');
+              const id = row.dataset.id;
+  
+              const updatedData = {
+                name: row.children[0].innerText.trim(),
+                quantity: row.children[1].innerText.trim() || 0,
+                variant: row.children[2].innerText.trim(),
+                rating: row.children[3].innerText.trim() || 0,
+                original_price: row.children[4].innerText.trim() || 0,
+                current_price: row.children[5].innerText.trim() || 0,
+                is_featured: row.children[6].innerText.trim().toUpperCase() === 'F' ? 1 : 0 
+              };
+  
+              fetch(`/admin/products/update/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData),
+              })
+                .then((resp) => {
+                  if (resp.ok) {
+                    alert('Product updated successfully!');
+                    loadProducts(); // Reload products after update
+                  } else {
+                    alert('Update failed!');
+                  }
+                })
+                .catch((err) => {
+                  console.error('Error:', err);
+                  alert('Error updating product');
+                });
+            });
+          });
+  
+          // Add event listeners to Delete buttons
+          document.querySelectorAll('.delete-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const row = btn.closest('tr');
+              const id = row.dataset.id;
+  
+              if (confirm('Are you sure you want to delete this product?')) {
+                fetch(`/admin/products/delete/${id}`, {
+                  method: 'DELETE',
+                })
+                  .then((resp) => {
+                    if (resp.ok) {
+                      alert('Product deleted successfully!');
+                      loadProducts(); // Reload products after deletion
+                    } else {
+                      alert('Delete failed!');
+                    }
+                  })
+                  .catch((err) => {
+                    console.error('Error:', err);
+                    alert('Error deleting product');
+                  });
+              }
+            });
+          });
+        })
+        .catch((err) => console.error('Error fetching products:', err));
+    }
+  
+    // Load products on page load
+    document.addEventListener('DOMContentLoaded', loadProducts);
   </script>
 </body>
 </html>
